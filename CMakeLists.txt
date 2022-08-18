@@ -17,7 +17,7 @@ set(EXECUTABLE ${PRJ_NAME}.elf)
 
 file(GLOB SRC_FILES CONFIGURE_DEPENDS
   src/bsp/*.c
-  src/bsp/cmsis/device/*.c
+  src/bsp/device/*.c
   src/hw/*.c
   src/hw/driver/*.c  
 )
@@ -27,6 +27,7 @@ file(GLOB_RECURSE SRC_FILES_RECURSE CONFIGURE_DEPENDS
   src/ap/*.c
   src/common/*.c    
 
+  src/lib/cmsis/*.c
   src/lib/drivers/*.c
 )
 
@@ -44,14 +45,15 @@ target_include_directories(${EXECUTABLE} PRIVATE
   src  
   src/ap
   src/bsp
-  src/bsp/cmsis/device
-  src/bsp/cmsis/include
+  src/bsp/device
   src/common 
   src/common/core
   src/common/hw/include 
   src/hw  
   src/lib  
 
+  src/lib/cmsis/device
+  src/lib/cmsis/include
   src/lib/drivers/inc
 )
 

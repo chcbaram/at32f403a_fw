@@ -14,16 +14,16 @@
 
 typedef struct
 {
-  GPIO_TypeDef *port;
-  uint16_t      pin;
-  GPIO_PinState on_state;
-  GPIO_PinState off_state;
+  gpio_type *port;
+  uint16_t  pin;
+  uint8_t   on_state;
+  uint8_t   off_state;
 } led_tbl_t;
 
 
 led_tbl_t led_tbl[LED_MAX_CH] =
     {
-        {GPIOC, GPIO_PIN_13, GPIO_PIN_RESET, GPIO_PIN_SET},
+        {GPIOC, GPIO_PINS_13, _DEF_LOW, _DEF_HIGH},
     };
 
 
@@ -35,21 +35,23 @@ static void cliLed(cli_args_t *args);
 bool ledInit(void)
 {
   bool ret = true;
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
+  gpio_init_type gpio_init_struct;
 
 
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+
+  crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
+  gpio_default_para_init(&gpio_init_struct);
+
+
+  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+  gpio_init_struct.gpio_out_type  = GPIO_OUTPUT_PUSH_PULL;
+  gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
+  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
 
   for (int i=0; i<LED_MAX_CH; i++)
   {
-    GPIO_InitStruct.Pin = led_tbl[i].pin;
-    HAL_GPIO_Init(led_tbl[i].port, &GPIO_InitStruct);
-
+    gpio_init_struct.gpio_pins = led_tbl[i].pin;
+    gpio_init(led_tbl[i].port, &gpio_init_struct);
     ledOff(i);
   }
 
@@ -64,21 +66,21 @@ void ledOn(uint8_t ch)
 {
   if (ch >= LED_MAX_CH) return;
 
-  HAL_GPIO_WritePin(led_tbl[ch].port, led_tbl[ch].pin, led_tbl[ch].on_state);
+  gpio_bits_write(led_tbl[ch].port, led_tbl[ch].pin, led_tbl[ch].on_state);
 }
 
 void ledOff(uint8_t ch)
 {
   if (ch >= LED_MAX_CH) return;
 
-  HAL_GPIO_WritePin(led_tbl[ch].port, led_tbl[ch].pin, led_tbl[ch].off_state);
+  gpio_bits_write(led_tbl[ch].port, led_tbl[ch].pin, led_tbl[ch].off_state);
 }
 
 void ledToggle(uint8_t ch)
 {
   if (ch >= LED_MAX_CH) return;
 
-  HAL_GPIO_TogglePin(led_tbl[ch].port, led_tbl[ch].pin);
+  led_tbl[ch].port->odt ^= led_tbl[ch].pin;
 }
 
 

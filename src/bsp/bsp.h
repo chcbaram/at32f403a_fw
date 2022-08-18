@@ -26,6 +26,7 @@
 
 
 #include "at32f403a_407.h"
+#include "at32f403a_407_clock.h"
 
 
 void bspInit(void);

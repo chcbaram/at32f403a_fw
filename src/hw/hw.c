@@ -28,4 +28,6 @@ volatile const firm_ver_t firm_ver __attribute__((section(".version"))) =
 void hwInit(void)
 {
   bspInit();
+
+  ledInit();
 }

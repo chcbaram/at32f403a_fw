@@ -46,6 +46,8 @@
   * @{
   */
 unsigned int system_core_clock           = HICK_VALUE; /*!< system clock frequency (core clock) */
+extern uint32_t __isr_vector_addr;
+
 /**
   * @}
   */
@@ -97,7 +99,8 @@ void SystemInit (void)
 #ifdef VECT_TAB_SRAM
   SCB->VTOR = SRAM_BASE  | VECT_TAB_OFFSET;  /* vector table relocation in internal sram. */
 #else
-  SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET;  /* vector table relocation in internal flash. */
+  //SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET;  /* vector table relocation in internal flash. */
+  SCB->VTOR = (uint32_t)&__isr_vector_addr;
 #endif
 }
 

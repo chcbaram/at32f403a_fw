@@ -11,10 +11,23 @@
 
 
 
+static volatile uint32_t systick_counter = 0;
+
+void SysTick_Handler(void)
+{
+  systick_counter++;
+}
+
 
 
 void bspInit(void)
 {
+  system_clock_config();
+
+  SysTick_Config(system_core_clock/1000);  
+  NVIC_SetPriority(SysTick_IRQn, 0);
+
+  __enable_irq();  
 }
 
 void delay(uint32_t ms)
@@ -29,13 +42,15 @@ void delay(uint32_t ms)
     HAL_Delay(ms);
   }
 #else
-  
+  uint32_t pre_time = systick_counter;
+
+  while(systick_counter-pre_time < ms);   
 #endif
 }
 
 uint32_t millis(void)
 {
-  return 0;
+  return systick_counter;
 }
 
 int __io_putchar(int ch)

@@ -29,5 +29,22 @@ void hwInit(void)
 {
   bspInit();
 
+  cliInit();
+  logInit();
   ledInit();
+  usbInit();
+  uartInit();
+  uartOpen(_DEF_UART1, 115200);
+  logOpen(_DEF_UART1, 115200);
+
+  logPrintf("[ Firmware Begin... ]\r\n");
+  logPrintf("Firm Ver Addr\t\t: 0x%X\r\n", (int)&firm_ver);
+  logPrintf("Firm Name \t\t: %s\r\n", firm_ver.name_str);
+  logPrintf("Firm Ver  \t\t: %s\r\n", firm_ver.version_str);
+  logPrintf("Core Clock \t\t: %d Mhz\r\n", system_core_clock/1000000);
+  logPrintf("\n");
+
+  usbBegin(USB_CDC_MODE);
+
+  logBoot(false);
 }

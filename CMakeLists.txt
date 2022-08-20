@@ -20,6 +20,11 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
   src/bsp/device/*.c
   src/hw/*.c
   src/hw/driver/*.c  
+
+  src/hw/driver/usb/*.c
+  src/hw/driver/usb/usb_cdc/*.c
+
+  src/lib/usbd_drivers/src/*.c
 )
 
 file(GLOB_RECURSE SRC_FILES_RECURSE CONFIGURE_DEPENDS
@@ -52,9 +57,13 @@ target_include_directories(${EXECUTABLE} PRIVATE
   src/hw  
   src/lib  
 
+  src/hw/driver/usb
+  src/hw/driver/usb/usb_cdc
+
   src/lib/cmsis/device
   src/lib/cmsis/include
   src/lib/drivers/inc
+  src/lib/usbd_drivers/inc
 )
 
 target_compile_definitions(${EXECUTABLE} PRIVATE

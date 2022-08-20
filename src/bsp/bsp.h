@@ -16,13 +16,6 @@
 #include "def.h"
 
 
-#define _USE_LOG_PRINT    1
-
-#if _USE_LOG_PRINT
-#define logPrintf(fmt, ...)     printf(fmt, ##__VA_ARGS__)
-#else
-#define logPrintf(fmt, ...)
-#endif
 
 
 #include "at32f403a_407.h"

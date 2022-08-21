@@ -120,22 +120,11 @@ bool flashWrite(uint32_t addr, uint8_t *p_data, uint32_t length)
   uint32_t write_addr;
   data_t  buf;
   uint32_t offset;
-  uint32_t sector_count = 0;
 
-
-  for (int i=0; i<FLASH_BANK_MAX; i++)
-  {
-    if (flashInSector(i, addr, length) == true)
-    {
-      sector_count++;
-    }
-  }
-
-  if (sector_count == 0)
+  if (flashInRange(addr, length) != true)
   {
     return false;
   }
-
 
   index = 0;
   offset = addr%FLASH_PAGE_SIZE;
@@ -164,19 +153,20 @@ bool flashWrite(uint32_t addr, uint8_t *p_data, uint32_t length)
   }
 
 
-  while((index + FLASH_PAGE_SIZE) <= length)
+  while(index < length)
   {
     write_length = constrain(length - index, 0, FLASH_PAGE_SIZE);
 
-
-    memcpy(&buf.u8Data[0], &p_data[index], FLASH_PAGE_SIZE);
-    if (flash_word_program(addr + index, buf.u32D) != FLASH_OPERATE_DONE)
+    if (write_length >= FLASH_PAGE_SIZE)
     {
-      flash_lock();
-      return false;
+      memcpy(&buf.u8Data[0], &p_data[index], FLASH_PAGE_SIZE);
+      if (flash_word_program(addr + index, buf.u32D) != FLASH_OPERATE_DONE)
+      {
+        flash_lock();
+        return false;
+      }
+      index += write_length;
     }
-
-    index += write_length;
 
     if ((length - index) > 0 && (length - index) < FLASH_PAGE_SIZE)
     {
@@ -222,7 +212,7 @@ bool flashInSector(uint16_t sector_num, uint32_t addr, uint32_t length)
   uint32_t flash_end;
 
 
-  sector_start = FLASH_ADDR;
+  sector_start = FLASH_ADDR + (sector_num*FLASH_SECTOR_SIZE);
   sector_end   = sector_start + FLASH_SECTOR_SIZE - 1;
   flash_start  = addr;
   flash_end    = addr + length - 1;

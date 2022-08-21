@@ -25,6 +25,7 @@
       "postLaunchCommands": [
         "break main",             
 
+        //"step 1",  
         "load build/at32f403a_fw.elf",   
 
         "monitor reg lr [mrw 0x20000004]",

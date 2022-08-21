@@ -19,7 +19,7 @@
 
 
 
-
+#define _USE_HW_FLASH
 
 
 #define _USE_HW_LED

@@ -21,13 +21,14 @@ void SysTick_Handler(void)
 
 
 void bspInit(void)
-{
+{  
   system_clock_config();
 
+  nvic_priority_group_config(NVIC_PRIORITY_GROUP_4); 
   SysTick_Config(system_core_clock/1000);  
   NVIC_SetPriority(SysTick_IRQn, 0);
 
-  __enable_irq();  
+  __enable_irq();    
 }
 
 void delay(uint32_t ms)

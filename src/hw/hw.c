@@ -32,6 +32,7 @@ void hwInit(void)
   cliInit();
   logInit();
   ledInit();
+  flashInit();
   usbInit();
   uartInit();
   uartOpen(_DEF_UART1, 115200);

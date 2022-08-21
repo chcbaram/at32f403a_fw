@@ -86,7 +86,7 @@ target_compile_options(${EXECUTABLE} PRIVATE
   )
 
 target_link_options(${EXECUTABLE} PRIVATE
-  -T../src/bsp/ldscript/AT32F403A_RAM.ld
+  -T../src/bsp/ldscript/AT32F403A_FLASH.ld
   -mcpu=cortex-m4
   -mthumb
   -mfpu=fpv4-sp-d16 

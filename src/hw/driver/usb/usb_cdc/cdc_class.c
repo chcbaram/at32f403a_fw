@@ -406,6 +406,7 @@ usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   qbufferWrite(&q_rx, g_rx_buff, rx_len);
 
 
+  #if 0
   uint32_t buf_len;
 
   buf_len = (q_rx.len - qbufferAvailable(&q_rx)) - 1;
@@ -418,6 +419,9 @@ usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   {
     is_rx_full = true;
   }
+  #else
+  usbd_ept_recv(pudev, USBD_CDC_BULK_OUT_EPT, g_rx_buff, USBD_OUT_MAXPACKET_SIZE);
+  #endif
 
   return status;
 }
